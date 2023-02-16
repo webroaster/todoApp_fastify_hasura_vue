@@ -12,23 +12,16 @@ await app.register(cors, {
 
 const API_URL: string = "http://localhost:8080/v1/graphql"
 
-// const postQuery = async (query: string): Promise<{data: any}> => {
-//   const { data } = await axios.post(API_URL, {
-//     query,
-//   })
-//   return data.data
-// }
-
 /**
  * 全てのTODOを取得
  */
 app.get("/getAll", async (request, reply) => {
   const query = `
-    query {
-      todos {
-          id
-          title
-          description
+    {
+      todos(order_by: {id: asc}) {
+        id
+        title
+        description
       }
     }
   `
@@ -105,8 +98,8 @@ app.post("/update", async (request, reply) => {
       update_todos(
         where: {id: {_eq: ${body.id}}},
         _set: {
-          title: ${body.title},
-          description: ${body.description}
+          title: "${body.title}",
+          description: "${body.description}",
         }) {
         affected_rows
         returning {
